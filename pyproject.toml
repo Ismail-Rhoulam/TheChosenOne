@@ -1,0 +1,42 @@
+[project]
+
+name = "TheChosenOne"
+version = "0.0.1"
+
+authors = [
+  { name="Ismail RHOULAM", email="rhoulamismail@gmail.com" }
+]
+
+maintainers = [
+  {name = "Ismail RHOULAM", email = "rhoulamismail@gmail.com" }
+]
+
+description = "TheChosenOne is a Python library created for fun"
+
+readme = "README.md"
+requires-python = ">=3.8"
+
+license = {file = "LICENSE.txt"}
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Topic :: Data Science :: AI Model",
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Developers"
+]
+
+dependencies = [
+  "numpy"
+]
+
+[project.urls]
+
+Homepage = "https://github.com/Ismail-Rhoulam/TheChosenOne"
+Issues = "https://github.com/Ismail-Rhoulam/TheChosenOne/issues"
+
+[build-system]
+
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
