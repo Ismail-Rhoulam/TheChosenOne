@@ -1,7 +1,7 @@
 [project]
 
 name = "TheChosenOne"
-version = "0.0.1"
+version = "0.0.01"
 
 authors = [
   { name="Ismail RHOULAM", email="rhoulamismail@gmail.com" }
@@ -11,7 +11,7 @@ maintainers = [
   {name = "Ismail RHOULAM", email = "rhoulamismail@gmail.com" }
 ]
 
-description = "TheChosenOne is a Python library created for fun"
+description = "TheChosenOne is a Python library created for university tasks"
 
 readme = "README.md"
 requires-python = ">=3.8"
@@ -28,7 +28,7 @@ classifiers = [
 ]
 
 dependencies = [
-  "numpy"
+  "easyocr"
 ]
 
 [project.urls]

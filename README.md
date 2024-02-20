@@ -1,6 +1,6 @@
 # TheChosenOne
 
-TheChosenOne is a Python library for fun.
+TheChosenOne is a Python library for university tasks.
 
 ## Installation
 
