@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, text # Importing the SQL interface
 
 class DataAssembler:
 
-    def __init__(self, db=None, csv1=None, csv2=None, csv3=None, csv4=None, csv5=None):
+    def __init__(self, db=None, csv1=None, csv2=None, csv3=None, csv4=None):
 
         if db is not None:
 
@@ -53,27 +53,37 @@ class DataAssembler:
             print(f'The DataFrame of the joined tables is under the class attribute: df0\n')
 
         if csv1 is not None:
-            self.df1 = pd.read_csv(csv1)
-            name_csv1 = re.search(r'/([^/]+)$', csv1).group(1)
-            print(f'The DataFrame of {name_csv1} is under the class attribute: df1\n')
+            if "/" in csv1:
+                self.df1 = pd.read_csv(csv1)
+                name_csv1 = re.search(r'/([^/]+)$', csv1).group(1)
+                print(f'The DataFrame of {name_csv1} is under the class attribute: df1\n')
+            else:
+                self.df1 = pd.read_csv(csv1)
+                print(f'The DataFrame of {csv1} is under the class attribute: df1\n')
 
         if csv2 is not None:
-            self.df2 = pd.read_csv(csv2)
-            name_csv2 = re.search(r'/([^/]+)$', csv2).group(1)
-            print(f'The DataFrame of {name_csv2} is under the class attribute: df2\n')
-        
+            if "/" in csv2:
+                self.df2 = pd.read_csv(csv2)
+                name_csv2 = re.search(r'/([^/]+)$', csv2).group(1)
+                print(f'The DataFrame of {name_csv2} is under the class attribute: df2\n')
+            else:
+                self.df2 = pd.read_csv(csv2)
+                print(f'The DataFrame of {csv2} is under the class attribute: df2\n')
+
         if csv3 is not None:
-            self.df3 = pd.read_csv(csv3)
-            name_csv3 = re.search(r'/([^/]+)$', csv3).group(1)
-            print(f'The DataFrame of {name_csv1} is under the class attribute: df3\n')
+            if "/" in csv3:
+                self.df3 = pd.read_csv(csv3)
+                name_csv3 = re.search(r'/([^/]+)$', csv3).group(1)
+                print(f'The DataFrame of {name_csv3} is under the class attribute: df3\n')
+            else:
+                self.df3 = pd.read_csv(csv3)
+                print(f'The DataFrame of {csv3} is under the class attribute: df3\n')
 
         if csv4 is not None:
-            self.df4 = pd.read_csv(csv4)
-            name_csv4 = re.search(r'/([^/]+)$', csv4).group(1)
-            print(f'The DataFrame of {name_csv2} is under the class attribute: df4\n')
-
-        if csv5 is not None:
-            self.df5 = pd.read_csv(csv5)
-            name_csv5 = re.search(r'/([^/]+)$', csv5).group(1)
-            print(f'The DataFrame of {name_csv2} is under the class attribute: df5\n')
-
+            if "/" in csv4:
+                self.df4 = pd.read_csv(csv4)
+                name_csv4 = re.search(r'/([^/]+)$', csv4).group(1)
+                print(f'The DataFrame of {name_csv4} is under the class attribute: df4\n')
+            else:
+                self.df4 = pd.read_csv(csv4)
+                print(f'The DataFrame of {csv4} is under the class attribute: df4\n')
