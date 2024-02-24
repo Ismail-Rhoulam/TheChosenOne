@@ -1,2 +1,2 @@
 from .FiscaPy import *
-from .DataAssembler import DataAssembler
+from .DataAssembler import *

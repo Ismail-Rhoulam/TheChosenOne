@@ -13,7 +13,7 @@ class DataAssembler:
             # Create a connection object
             self.co = engine.connect()
 
-            print('Engine created sucessfully \n')
+            print('Engine created sucessfully\n')
 
             
             tables = [] # Set up a list of the tables of the database
@@ -21,36 +21,48 @@ class DataAssembler:
             for row in result: # Iterate in the query result
                 tables.append(re.sub(r'[^\w\s]','', str(row))) # Add each processed table name to the list created before
             
-            print('Tables :')
-            for table in tables:
-                print(f'    {table}')
+            print('Tables & their columns :\n')
                 
             table_columns = {} # A dictionary to store table names and their columns
             for table in tables: # For each table in the list created before
+                print(f'        {table}')
                 sql_query1 = f"PRAGMA table_info({table});" # SQL query to retrieve table info
                 info = self.co.execute(text(sql_query1)) # Store the result in a variable
-                table_columns[table] = [row[1] for row in info] # Add the table name as a key and the columns it contains as values
+                columns = []
+                for row in info:
+                    columns.append(row[1])
+                table_columns[table] = columns # Add the table name as a key and the columns it contains as values
+                print(f'            {columns}')
             
             common_col = set(table_columns[tables[0]]) # Get the common column between the tables
             for name, col in table_columns.items():
                 common_col.intersection_update(col)
             co_col = list(common_col) # Turn the set into a list
-            print("\nCommon column:", co_col[0], "\n")
-        
-            col = f'({re.sub(r'[^\w\s]', '', co_col[0])})' # Make the commun column suitable for a SQL query
+            print('')
 
-            # SQL query to join the join the tables in one table using the common column
-            sql_query2 = f'''
-            SELECT *
-            FROM {tables[0]}'''
-            for rest in tables[1:]: # Make the query scalable regarding the the number of tables in the database
-                sql_query2 += f'''
-            LEFT JOIN {rest} USING {col}'''
+            if not co_col:
+                print('No common column in the tables\n')
+            else:
+                print("Common columns: ", f'{co_col}\n')
 
-            self.df0 = pd.read_sql_query(text(sql_query2), self.co) # Create a dataframe
+                if len(co_col) > 1:
+                    col = input('Choose a column to use for joining tables: ')
+                else:
+                    col = f'({re.sub(r'[^\w\s]', '', co_col[0])})' # Make the commun column suitable for a SQL query
 
-            print(f'SQL query used:{sql_query2}\n')
-            print(f'The DataFrame of the joined tables is under the class attribute: df0\n')
+                # SQL query to join the join the tables in one table using the common column
+                sql_query2 = f'''
+        SELECT *
+        FROM {tables[0]}'''
+                for rest in tables[1:]: # Make the query scalable regarding the the number of tables in the database
+                    sql_query2 += f'''
+        LEFT JOIN {rest} USING {col}'''
+
+                self.df0 = pd.read_sql_query(text(sql_query2), self.co) # Create a dataframe
+
+                print(f'SQL query used: {sql_query2}\n')
+
+                print(f'The DataFrame of the joined tables is under the class attribute: df0\n')
 
         if csv1 is not None:
             if "/" in csv1:
