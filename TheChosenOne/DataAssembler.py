@@ -1,6 +1,14 @@
 import re # Importing the regex pattern
+import os
+import logging
 import pandas as pd # Importing the Pandas package with an alias, pd
 from sqlalchemy import create_engine, text # Importing the SQL interface
+
+# Name our logger so we know that logs from this module come from the data_ingestion module
+logger = logging.getLogger('DataAssembler')
+
+# Set a basic logging message up that prints out a timestamp, the name of our logger, and the message
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 class DataAssembler:
 
@@ -8,13 +16,38 @@ class DataAssembler:
 
         if db is not None:
 
-            # Create an engine for the database
-            engine = create_engine(f'sqlite:///{db}') # Ensure that the db variable contains the path to the .db file
-            # Create a connection object
-            self.co = engine.connect()
+            if not os.path.exists(db):
+                logger.error(f"Database file '{db}' not found.")
+                raise FileNotFoundError(f"Database file '{db}' not found.")
 
-            print('Engine created sucessfully\n')
+            try:
+                # Attempt to create an engine without connecting
+                engine = create_engine(f'sqlite:///{db}', pool_pre_ping=True)
+                # Test connection
+                with engine.connect() as conn:
+                    # Check if the connection is established
+                    conn.execute(text("SELECT name FROM sqlite_master WHERE type='table';"))  # This is a simple query to check the connection
+                # If the connection is successful, log a message
+                logger.info("Connection to the database established successfully.")
 
+                # Set the connection attribute
+                self.co = engine.connect()
+
+                # log the successful engine creation
+                logger.info('Engine created successfully\n')
+
+            except ImportError as e:  # If we get an ImportError, inform the user SQLAlchemy is not installed
+                logger.error("SQLAlchemy is required to use this function. Please install it first.")
+                raise e
+            except exc.ArgumentError as e:  # If there's an invalid database URL
+                logger.error(f"Invalid database URL: {e}")
+                raise e
+            except exc.DBAPIError as e:  # If there's an error connecting to the database
+                logger.error(f"Failed to connect to the database. Error: {e}")
+                raise e
+            except Exception as e:  # If we fail to create an engine inform the user
+                logger.error(f"Failed to create database engine. Error: {e}")
+                raise e
             
             tables = [] # Set up a list of the tables of the database
             result = self.co.execute(text("SELECT name FROM sqlite_master WHERE type='table';")) # SQL query to retrieve table names
